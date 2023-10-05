@@ -1,5 +1,6 @@
 <?php
 include_once 'claseAlumno.php';
+include_once 'accesoaDatos.php'
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,9 +30,46 @@ include_once 'claseAlumno.php';
         //Si pulsamos en Crear Alumno se crea el objeto y se muestra
         if(isset($_POST['crear'])){
             $a = new Alumno($_POST['numExp'],$_POST['nombre'],strtotime($_POST['fechaN']));
-            $a->mostrar();
+
+            //Chequear si el nº de expediente no existe en el fichero
+            //Si existe, se debe mostrar un error
+            $alTmp = obtenerAlumno($a->getNumExp());
+            if($alTmp==null){
+                //Guardar el alumno en el fichero
+                if(crearAlumno($a)){
+                    echo '<p style="color:blue;">Alumno creado:'.$a->mostrar().'</p>';
+                }
+                else{
+                    echo '<p style="color:red;">Error al crear el alumno</p>';
+                }
+            }
+            else{
+                echo '<p style="color:red;">Error: el alumno'.
+                     $a->getNumExp().' ya existe</p>';
+            }
         }
     ?>
-
+    <!-- Mostrar alumnos -->
+    <h1>LISTADO DE ALUMNOS</h1>
+    <hr/>
+    <table border="1" width="50%">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Fecha Nacimiento</th>
+        </tr>
+        <?php
+        //Obtenemos en un array todos los alumnos que hay en el fichero
+        //$alumnos va a ser un array de objetos Alumno
+        $alumnos=obtenerAlumnos();
+        foreach($alumnos as $a){
+            echo '<tr>';
+            echo '<td>'.$a->getNumExp().'</td>';
+            echo '<td>'.$a->getNombre().'</td>';
+            echo '<td>'.date('d/m/Y',$a->getFechaN()).'</td>';
+            echo '</tr>';
+        }
+        ?>
+    </table>
 </body>
 </html>
