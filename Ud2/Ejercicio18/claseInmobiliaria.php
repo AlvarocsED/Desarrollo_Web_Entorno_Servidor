@@ -180,5 +180,16 @@ class Inmobiliaria{
 
         return $this;
     }
+    public function guardar(){
+        return [
+            "tipo_vivienda"=>$this->getTipo_vivienda,
+            "zona"=>$this->getZona,
+            "direccion"=>$this->getDireccion,
+            "nºhabitaciones"=>$this->getHabitaciones,
+            "precio"=>$this->getPrecio,
+            "tamaño"=>$this->getTamaño,
+            "observaciones"=>$this->getObservaciones
+        ];
+    }                                         
 }
 ?>
