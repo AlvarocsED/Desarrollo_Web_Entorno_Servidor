@@ -8,9 +8,9 @@
  <body>
     <h1>Viendo las estancias guardadas</h1>
     <?php
-    $archivoestancia='estancias.txt';
-    if (file_exists($archivoEstancias)) {
-        +$estancias = file($archivoEstancias, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $archivoestancias='estancias.txt';
+    if (file_exists($archivoestancias)) {
+        $estancias = file($archivoestancias, FILE_IGNORE_NEW_LINES);
         foreach ($estancias as $estancia) {
             $datos = explode(';', $estancia);
             list($dni, $nombre, $tipoHabitacion, $tipoEstancia, $noches, $cuna, $supletoria, $pagoEfectivo) = $datos;
