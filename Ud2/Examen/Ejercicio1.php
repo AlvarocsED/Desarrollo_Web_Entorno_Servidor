@@ -65,16 +65,20 @@
             <label for="equipaciones">Equipaciones y Extras</label>
         </div>
         <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Entrenamientos(25.00€)" checked="checked">Entrenamientos(25.00€)
+            <input type="checkbox" name="equipaciones" id="equipaciones" value="Entrenamientos(25.00)" checked="checked">Entrenamientos(25.00€)
         </div>
         <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Partidos(25.00€)">Partidos(25.00€)
+            <input type="checkbox" name="equipaciones" id="equipaciones" value="Partidos(25.00)">Partidos(25.00€)
         </div>
         <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Chandal(40.00€)">Chandal(40.00€)
+            <input type="checkbox" name="equipaciones" id="equipaciones" value="Chandal(40.00)">Chandal(40.00€)
         </div>
         <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Bolso(15.00€">Bolso(15.00€)
+            <input type="checkbox" name="equipaciones" id="equipaciones" value="Bolso(15.00)">Bolso(15.00€)
+        </div>
+        <div>
+            <input type="submit" name="enviar" id="enviar">
+            <input type="reset" name="limpiar" id="limpiar" value="Limpiar">
         </div>
         </form>
         <?php
@@ -88,53 +92,28 @@
                 }
                 else{
                     if(isset($_POST['equipaciones']) and isset($_POST['equipaciones'][1])){
-                        if($_POST['equipaciones'][0]=="Entrenamientos(25.00€)" or $_POST['opciones'][1]=="Partidos(25.00€)"){
+                        if($_POST['equipaciones'][0]=="Entrenamientos(25.00)" or $_POST['equipaciones'][1]=="Partidos(25.00)"){
                             echo '<h3 style="color:red;">Error:Hay que marcar entrenamiento o partido</h3>';
                             $error=true;
                         }
                     }
                     if(!isset($error)){
                         switch($_POST['equipaciones']){
-                            case 'Entrenamiento(25.00€)':
+                            case 'Entrenamiento(25.00)':
                                 $importe= $_POST['equipaciones']*25;
                                 break;
                             case 'Partidos(25.00)':
                                 $importe= $_POST['equipaciones']*25;
                                 break;
-                            case 'Chandal(40.00€)':
+                            case 'Chandal(40.00)':
                                 $importe= $_POST['equipaciones']*40;
                                 break;
-                            case 'Bolso':
+                            case 'Bolso(15.00)':
                                 $importe=$_POST['equipaciones']*15;
                                 break;
                         }
-                        //Subo 10%
-                        if(isset($_POST['estancia']) and $_POST['estancia']==2){
-                            $importe*=1.10;
-                        }
-                        //BAjo un 10%
-                        if(isset($_POST['estancia']) and $_POST['estancia']==3){
-                            $importe*=0.90;
-                        }
-
-                        echo '<h3 style="color:blue;">Error:Entrada correcta. El importe de la estancia 
-                        es de '.$importe.'</h3>';
+                        echo '<h3 style="color:blue;">Datos correctos. El importe total gastado es '.$importe.'euros</h3>';
                     }
-                    //Comprobando los valores del array sin usar funciones de array
-                    /*if(isset($_POST['opciones'])){
-                        $hayCuna = false;
-                        foreach($_POST['opciones'] as $o){
-                            if($o==1 or $o==2){
-                                if(!$hayCuna){
-                                    $hayCuna=true;
-                                }
-                                else{
-                                    echo '<h3 style="color:red;">Error:No se puede marcar cuna y cama supletoria</h3>';
-                                }
-                                
-                            }
-                        }
-                    }*/
              
             }
             
@@ -143,6 +122,5 @@
     ?>
 </body>
 </html>
-?>
 </body>
 </html>
