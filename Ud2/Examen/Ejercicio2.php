@@ -1,3 +1,25 @@
+    <?php
+function rellenarSelected($campo, $item, $opcionPorDefecto){
+    if(isset($_POST[$campo])){
+        if($_POST[$campo]==$item){
+            echo 'selected = "selected"';
+        }
+    }
+    elseif($opcionPorDefecto){
+        echo 'selected = "selected"';
+    }
+}
+function rellenarRadio($campo, $item, $opcionPorDefecto){
+    if(isset($_POST[$campo])){
+        if($_POST[$campo]==$item){
+            echo 'checked = "checked"';
+        }
+    }
+    elseif($opcionPorDefecto){
+        echo 'checked = "checked"';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -99,7 +121,7 @@
                     }
                     if(!isset($error)){
                         $importe=0;
-                        foreach ($equipaciones as $equipacion) {
+                        foreach($equipaciones as $equipacion){
                          switch($_POST[$equipacion]){
                             case 'Entrenamientos(25.00)':
                                 $importe+=25;
@@ -115,14 +137,12 @@
                                 break;
                         }
                         
-                    }
-                    echo '<h3 style="color:blue;">Datos correctos. El importe total gastado es '.$importe.'euros</h3>';
+                    }echo '<h3 style="color:blue;">Datos correctos. El importe total gastado es '.$importe.'euros</h3>';
              
             }
             
         }
-    }
-}   
+    }   
     ?>
 </body>
 </html>
