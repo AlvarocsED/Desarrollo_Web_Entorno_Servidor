@@ -98,7 +98,7 @@
                         }
                     }
                     if(!isset($error)){
-                        switch($_POST['equipaciones']){
+                         switch($_POST['equipaciones']){
                             case 'Entrenamiento(25.00)':
                                 $importe= $_POST['equipaciones']*25;
                                 break;
