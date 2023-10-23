@@ -8,123 +8,109 @@
 <body>
     <form action="" method="post">
         <div>
-            <label for="numJ">Nº de jugador</label>
+            <label>Nº de jugador</label>
+            <br/>
+            <input type="number" name="numJ"/>
+
         </div>
         <div>
-            <input type="number" name="numJ" id="numJ">
+            <label>Nombre y apellidos</label>
+            <br/>
+            <input type="text" name="nombre" placeholder="Nombre y apellidos del jugador"/>            
         </div>
         <div>
-            <label for="nombre">Nombre y apellidos</label>
+            <label>FEcha Nacimiento</label>
+            <br/>
+            <input type="date" name="fechaN"/>            
         </div>
         <div>
-            <input type="text" name="nombre" id="nombre" placeholder="Nombre y apellidos del jugador">
+            <label>Selecciona la categoría</label>
+            <br/>
+            <select name="cat">
+                <option>Benjamín</option>
+                <option>Alevín</option>
+                <option>Infantil</option>
+                <option>Cadete</option>
+                <option>Juntior</option>
+                <option>Senior</option>
+            </select>            
         </div>
         <div>
-        <label for="fNac">Fecha de nacimiento</label>
+            <label>Tipo categoría</label>
+            <br/>
+            <input type="radio" name="tipoC" value="Masculina" checked="checked"/>Masculina
+            <input type="radio" name="tipoC" value="Femenina" />Femenina
+            <input type="radio" name="tipoC" value="Mixta" />Mixta
         </div>
         <div>
-            <input type="date" name="fNac" id="fNac" value=<?php echo date('d-m-Y')?> placeholder="dd-mm-aaaa">
+            <label>Competiciones</label>
+            <br/>
+            <select name="competiciones[]" multiple="multiple">
+                <option>Primera</option>
+                <option>Segunda A</option>
+                <option>Segunda B</option>
+                <option>Tercera</option>
+            </select>            
         </div>
         <div>
-            <label for="categ">Selecciona Categoria</label>
+            <label>Equipaciones</label>
+            <br/>
+            <input type="checkbox" name="equip[]" value="Entrenamientos" checked="checked"/>Entrenamientos
+            <input type="checkbox" name="equip[]" value="Partidos" />Partidos
+            <input type="checkbox" name="equip[]" value="Chandal" />Chandal
+            <input type="checkbox" name="equip[]" value="Bolso" />Bolso
         </div>
-        <div>
-            <select name="categ" id="categ">
-                <option value="Benjamin">Benjamín</option>
-                <option value="Alevin">Alevín</option>
-                <option value="Infantil">Infantil</option>
-                <option value="Cadehe">Cadete</option>
-                <option value="Junior">Junior</option>
-                <option value="Senior">Senior</option>
-                </select>
-        </div>
-        <div>
-            <label for="tipo">Tipo de Categoria</label>
-        </div>
-        <div>
-            <input type="radio" name="tipo" id="tipo" value="Masculino" checked="checked">Masculino
-            <input type="radio" name="tipo" id="tipo" value="Femenino">Femenino
-            <input type="radio" name="tipo" id="tipo" value="Mixta">Mixta
-        </div>
-        <div>
-        <label for="compe">Selecciona la Competicion</label>
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Primera">Primera
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Segunda A">Segunda A
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Segunda B">Segunda B
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Tercera">Tercera
-        </div>
-        <div>
-            <label for="equipaciones">Equipaciones y Extras</label>
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Entrenamientos(25.00)" checked="checked">Entrenamientos(25.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Partidos(25.00)">Partidos(25.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Chandal(40.00)">Chandal(40.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Bolso(15.00)">Bolso(15.00€)
-        </div>
-        <div>
-            <input type="submit" name="enviar" id="enviar">
-            <input type="reset" name="limpiar" id="limpiar" value="Limpiar">
-        </div>
-        </form>
-        <?php
-        if(isset($_POST['enviar'])){
-            if(empty($_POST['numJ']) or empty($_POST['nombre'])  or empty($_POST['fNac']) or empty($_POST['categ']) or empty($_POST['categ']or empty($_POST['tipo'])) or empty($_POST['equipaciones'])){
-                echo '<h3 style="color:red;">Error:Todos los campos son obligatorios</h3>';
+
+        <input type="submit" name="enviar" value="Enviar" />
+        <input type="reset" name="limpiar" value="Limpiar" />
+    </form>
+
+    <?php
+    if(isset($_POST['enviar'])){
+        if(empty($_POST['numJ']) or empty($_POST['nombre']) or empty($_POST['fechaN']) or empty($_POST['cat']) or
+        !isset($_POST['tipoC']) or !isset($_POST['competiciones']) or !isset($_POST['equip'])){
+            echo "<h3 style='color:red;'>Error, hay que rellenar todos los campos</h3>";
+        }
+        elseif($_POST['tipoC']=='Mixta' and $_POST['cat']!='Alevín' and $_POST['cat']!='Benjamín'){
+            echo "<h3 style='color:red;'>Error, no se permite tipo categoría mixta </h3>";
+        }
+        else{
+            if($_POST['equip'][0]!='Entrenamientos' and $_POST['equip'][0]!='Partidos'){
+                echo "<h3 style='color:red;'>Error, hay que marcar al menos una equipación </h3>";
+            }
+            $error = true;
+            foreach($_POST['equip'] as $e){
+                if($e=='Entrenamientos' or $e=='Partidos'){
+                    $error=false;
+                    break;
+                }
+            }
+            if($error){
+                echo "<h3 style='color:red;'>Error, hay que marcar al menos una equipación </h3>";
             }
             else{
-                if(isset($_POST['tipo']) and $_POST['tipo']=='Mixta' and $_POST['categ']=='Benjamin' and $_POST['categ']=='Alevin'){
-                    echo '<h3 style="color:red;">Error:Tipo de categoria mixta disponible solo para categorias alevín y benjamín</h3>';
+                $precio=0;
+                foreach($_POST['equip'] as $e){
+                    switch($e){
+                        case 'Entrenamientos':
+                            $precio+=25;
+                            break;
+                        case 'Partidos':
+                            $precio+=25;
+                            break;
+                        case 'Chandal':
+                            $precio+=40;
+                            break;
+                        case 'Bolso':
+                            $precio+=15;
+                            break;
+                    }
                 }
-                else{
-                    if(isset($_POST['equipaciones']) and isset($_POST['equipaciones'][1])){
-                        if($_POST['equipaciones'][0]=="Entrenamientos(25.00)" or $_POST['equipaciones'][1]=="Partidos(25.00)"){
-                            echo '<h3 style="color:red;">Error:Hay que marcar entrenamiento o partido</h3>';
-                            $error=true;
-                        }
-                    }
-                    if(!isset($error)){
-                        $importe=0;
-                        foreach ($equipaciones as $equipacion) {
-                         switch($_POST[$equipacion]){
-                            case 'Entrenamientos(25.00)':
-                                $importe+=25;
-                                break;
-                            case 'Partidos(25.00)':
-                                $importe+=25;
-                                break;
-                            case 'Chandal(40.00)':
-                                $importe+=40;
-                                break;
-                            case 'Bolso(15.00)':
-                                $importe+=15;
-                                break;
-                        }
-                        
-                    }
-                    echo '<h3 style="color:blue;">Datos correctos. El importe total gastado es '.$importe.'euros</h3>';
-             
+                echo '<h3 style="color:green;">DAtos correctos. El importe a pagar es de'.$precio.'</h3>';
             }
-            
+
         }
     }
-}   
     ?>
-</body>
-</html>
 </body>
 </html>

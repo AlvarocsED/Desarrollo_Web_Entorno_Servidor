@@ -1,22 +1,40 @@
-    <?php
-function rellenarSelected($campo, $item, $opcionPorDefecto){
-    if(isset($_POST[$campo])){
-        if($_POST[$campo]==$item){
-            echo 'selected = "selected"';
-        }
+<?php
+function rellenarCategoria($cat,$defecto){
+    if((isset($_POST['cat']) and $_POST['cat']==$cat) or $defecto){
+        echo 'selected="selected"';
     }
-    elseif($opcionPorDefecto){
-        echo 'selected = "selected"';
-    }
+    
 }
-function rellenarRadio($campo, $item, $opcionPorDefecto){
-    if(isset($_POST[$campo])){
-        if($_POST[$campo]==$item){
-            echo 'checked = "checked"';
-        }
+function rellenarTipoC($tipo,$defecto){
+    if((isset($_POST['tipoC']) and $_POST['tipoC']==$tipo) or $defecto){
+        echo 'checked="checked"';
     }
-    elseif($opcionPorDefecto){
-        echo 'checked = "checked"';
+    
+}
+function rellenarCompeticiones($compe){
+    if(isset($_POST['competiciones'])){
+        foreach($_POST['competiciones'] as $c){
+            if($c==$compe){
+                echo 'selected="selected"';
+                break;                
+            }
+        }
+    
+    }
+    
+}
+function rellenarEquipaciones($equip,$defecto){
+    if(isset($_POST['equip'])){
+        foreach($_POST['equip'] as $e){
+            if($e==$equip){
+                echo 'checked="checked"';
+                break;                
+            }
+        }
+    
+    }
+    if($defecto){
+        echo 'checked="checked"';                
     }
 }
 ?>
@@ -30,121 +48,111 @@ function rellenarRadio($campo, $item, $opcionPorDefecto){
 <body>
     <form action="" method="post">
         <div>
-            <label for="numJ">Nº de jugador</label>
+            <label>Nº de jugador</label>
+            <br/>
+            <input type="number" name="numJ" value="<?php echo (isset($_POST['numJ'])?$_POST['numJ']:''); ?>"/>
+
         </div>
         <div>
-            <input type="number" name="numJ" id="numJ">
+            <label>Nombre y apellidos</label>
+            <br/>
+            <input type="text" name="nombre" value="<?php echo (isset($_POST['nombre'])?$_POST['nombre']:'');?>" 
+            placeholder="Nombre y apellidos del jugador"/>            
         </div>
         <div>
-            <label for="nombre">Nombre y apellidos</label>
+            <label>FEcha Nacimiento</label>
+            <br/>
+            <input type="date" name="fechaN" value="<?php echo (isset($_POST['fechaN'])?$_POST['fechaN']:'');?>"/>            
         </div>
         <div>
-            <input type="text" name="nombre" id="nombre" placeholder="Nombre y apellidos del jugador">
+            <label>Selecciona la categoría</label>
+            <br/>
+            <select name="cat">
+                <option <?php rellenarCategoria('Benjamín',true)?>>Benjamín</option>
+                <option <?php rellenarCategoria('Alevín',false)?>>Alevín</option>
+                <option <?php rellenarCategoria('Infantil',false)?>>Infantil</option>
+                <option <?php rellenarCategoria('Cadete',false)?>>Cadete</option>
+                <option <?php rellenarCategoria('Juntior',false)?>>Juntior</option>
+                <option <?php rellenarCategoria('Senior',false)?>>Senior</option>
+            </select>            
         </div>
         <div>
-        <label for="fNac">Fecha de nacimiento</label>
+            <label>Tipo categoría</label>
+            <br/>
+            <input type="radio" name="tipoC" value="Masculina" <?php rellenarTipoC('Masculina',true);?>/>Masculina
+            <input type="radio" name="tipoC" value="Femenina" <?php rellenarTipoC('Femenina',false);?>/>Femenina
+            <input type="radio" name="tipoC" value="Mixta" <?php rellenarTipoC('Mixta',false);?>/>Mixta
         </div>
         <div>
-            <input type="date" name="fNac" id="fNac" value=<?php echo date('d-m-Y')?> placeholder="dd-mm-aaaa">
+            <label>Competiciones</label>
+            <br/>
+            <select name="competiciones[]" multiple="multiple">
+                <option <?php rellenarCompeticiones('Primera');?>>Primera</option>
+                <option <?php rellenarCompeticiones('Segunda A');?>>Segunda A</option>
+                <option <?php rellenarCompeticiones('Segunda B');?>>Segunda B</option>
+                <option <?php rellenarCompeticiones('Tercera');?>>Tercera</option>
+            </select>            
         </div>
         <div>
-            <label for="categ">Selecciona Categoria</label>
+            <label>Equipaciones</label>
+            <br/>
+            <input type="checkbox" name="equip[]" value="Entrenamientos" 
+            <?php rellenarEquipaciones('Entrenamientos',true);?>/>Entrenamientos
+            <input type="checkbox" name="equip[]" value="Partidos" <?php rellenarEquipaciones('Partidos',false);?>/>Partidos
+            <input type="checkbox" name="equip[]" value="Chandal" <?php rellenarEquipaciones('Chandal',false);?>/>Chandal
+            <input type="checkbox" name="equip[]" value="Bolso" <?php rellenarEquipaciones('Bolso',false);?>/>Bolso
         </div>
-        <div>
-            <select name="categ" id="categ">
-                <option value="Benjamin">Benjamín</option>
-                <option value="Alevin">Alevín</option>
-                <option value="Infantil">Infantil</option>
-                <option value="Cadehe">Cadete</option>
-                <option value="Junior">Junior</option>
-                <option value="Senior">Senior</option>
-                </select>
-        </div>
-        <div>
-            <label for="tipo">Tipo de Categoria</label>
-        </div>
-        <div>
-            <input type="radio" name="tipo" id="tipo" value="Masculino" checked="checked">Masculino
-            <input type="radio" name="tipo" id="tipo" value="Femenino">Femenino
-            <input type="radio" name="tipo" id="tipo" value="Mixta">Mixta
-        </div>
-        <div>
-        <label for="compe">Selecciona la Competicion</label>
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Primera">Primera
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Segunda A">Segunda A
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Segunda B">Segunda B
-        </div>
-        <div>
-            <input type="checkbox" name="categ" id="categ" value="Tercera">Tercera
-        </div>
-        <div>
-            <label for="equipaciones">Equipaciones y Extras</label>
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Entrenamientos(25.00)" checked="checked">Entrenamientos(25.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Partidos(25.00)">Partidos(25.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Chandal(40.00)">Chandal(40.00€)
-        </div>
-        <div>
-            <input type="checkbox" name="equipaciones" id="equipaciones" value="Bolso(15.00)">Bolso(15.00€)
-        </div>
-        <div>
-            <input type="submit" name="enviar" id="enviar">
-            <input type="reset" name="limpiar" id="limpiar" value="Limpiar">
-        </div>
-        </form>
-        <?php
-        if(isset($_POST['enviar'])){
-            if(empty($_POST['numJ']) or empty($_POST['nombre'])  or empty($_POST['fNac']) or empty($_POST['categ']) or empty($_POST['categ']or empty($_POST['tipo'])) or empty($_POST['equipaciones'])){
-                echo '<h3 style="color:red;">Error:Todos los campos son obligatorios</h3>';
+
+        <input type="submit" name="enviar" value="Enviar" />
+        <input type="reset" name="limpiar" value="Limpiar" />
+    </form>
+
+    <?php
+    if(isset($_POST['enviar'])){
+        if(empty($_POST['numJ']) or empty($_POST['nombre']) or empty($_POST['fechaN']) or empty($_POST['cat']) or
+        !isset($_POST['tipoC']) or !isset($_POST['competiciones']) or !isset($_POST['equip'])){
+            echo "<h3 style='color:red;'>Error, hay que rellenar todos los campos</h3>";
+        }
+        elseif($_POST['tipoC']=='Mixta' and $_POST['cat']!='Alevín' and $_POST['cat']!='Benjamín'){
+            echo "<h3 style='color:red;'>Error, no se permite tipo categoría mixta </h3>";
+        }
+        else{
+            if($_POST['equip'][0]!='Entrenamientos' and $_POST['equip'][0]!='Partidos'){
+                echo "<h3 style='color:red;'>Error, hay que marcar al menos una equipación </h3>";
+            }
+            $error = true;
+            foreach($_POST['equip'] as $e){
+                if($e=='Entrenamientos' or $e=='Partidos'){
+                    $error=false;
+                    break;
+                }
+            }
+            if($error){
+                echo "<h3 style='color:red;'>Error, hay que marcar al menos una equipación </h3>";
             }
             else{
-                if(isset($_POST['tipo']) and $_POST['tipo']=='Mixta' and $_POST['categ']=='Benjamin' and $_POST['categ']=='Alevin'){
-                    echo '<h3 style="color:red;">Error:Tipo de categoria mixta disponible solo para categorias alevín y benjamín</h3>';
-                }
-                else{
-                    if(isset($_POST['equipaciones']) and isset($_POST['equipaciones'][1])){
-                        if($_POST['equipaciones'][0]=="Entrenamientos(25.00)" or $_POST['equipaciones'][1]=="Partidos(25.00)"){
-                            echo '<h3 style="color:red;">Error:Hay que marcar entrenamiento o partido</h3>';
-                            $error=true;
-                        }
+                $precio=0;
+                foreach($_POST['equip'] as $e){
+                    switch($e){
+                        case 'Entrenamientos':
+                            $precio+=25;
+                            break;
+                        case 'Partidos':
+                            $precio+=25;
+                            break;
+                        case 'Chandal':
+                            $precio+=40;
+                            break;
+                        case 'Bolso':
+                            $precio+=15;
+                            break;
                     }
-                    if(!isset($error)){
-                        $importe=0;
-                        foreach($equipaciones as $equipacion){
-                         switch($_POST[$equipacion]){
-                            case 'Entrenamientos(25.00)':
-                                $importe+=25;
-                                break;
-                            case 'Partidos(25.00)':
-                                $importe+=25;
-                                break;
-                            case 'Chandal(40.00)':
-                                $importe+=40;
-                                break;
-                            case 'Bolso(15.00)':
-                                $importe+=15;
-                                break;
-                        }
-                        
-                    }echo '<h3 style="color:blue;">Datos correctos. El importe total gastado es '.$importe.'euros</h3>';
-             
+                }
+                echo '<h3 style="color:green;">DAtos correctos. El importe a pagar es de'.$precio.'</h3>';
             }
-            
+
         }
-    }   
+    }
     ?>
-</body>
-</html>
 </body>
 </html>
