@@ -1,4 +1,5 @@
 <?php
+
     if(isset($_POST['tirar'])){
         //Comprobar si hay nombre de jugador
         if(empty($_POST['nombre'])){
@@ -13,12 +14,13 @@
             //Generar nº
             $numero = rand(1,6);
             //Guardar datos en array
-            $jugadores[]=[$_POST['nombre']=>$numero];
+            $jugadores=[$_POST['nombre']=$numero];
             //Guardar en sesisión
             $_SESSION['jugadores']=$jugadores;
         }
     }
     elseif(isset($_POST['borrar'])){
+        session_unset();
     }
 
 ?>
