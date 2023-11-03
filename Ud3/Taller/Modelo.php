@@ -44,6 +44,26 @@ class Modelo{
         }
         return $resultado;
     }
+    public function obtenerPieza($codigo){
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare("select * from pieza where codigo = ?");
+            $params = array($codigo);
+            $consulta->execute($params);
+            if($fila=$consulta->fetch()){
+                $resultado = new Pieza();
+                $resultado->setCodigo($fila["codigo"]);
+                $resultado->setClase($fila["clase"]);
+                $resultado->setDescripcion($fila["descripcion"]);
+                $resultado->setPrecio($fila["precio"]);
+                $resultado->setStock($fila["stock"]);
+            }
+            
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
 
 
     /**
