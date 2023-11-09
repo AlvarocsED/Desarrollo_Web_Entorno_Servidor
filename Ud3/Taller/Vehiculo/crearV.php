@@ -10,7 +10,7 @@
 </head>
 <body>
 <?php 
-    $bd = new AccesoDatos();
+    $bd = new Modelo();
     if($bd!=null){
         
         
@@ -33,7 +33,7 @@
         }
         
         echo "<h1>CREAR VEHÍCULO</h1>";
-        include_once '../menu.php';
+        include_once '../Menu.php';
 
         ?>
         <form action="" method="post">

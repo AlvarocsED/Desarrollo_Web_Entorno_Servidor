@@ -1,5 +1,5 @@
 <?php
-class Vehiculo(){
+class Vehiculo{
     private int $codigo;
     private int $propietario;
     private string $matricula;

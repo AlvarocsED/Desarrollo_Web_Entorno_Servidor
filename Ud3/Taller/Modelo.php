@@ -306,7 +306,7 @@ class Modelo{
             if($fila=$datos->fetch()){
                 $resultado = new Vehiculo();
                 $resultado->setCodigo($fila["codigo"]);
-                $resultado->setPropietario($fila["nombrePropietario"]);
+                $resultado->setPropietario($fila["propietario"]);
                 $resultado->setMatricula($fila["matricula"]);
                 $resultado->setColor($fila["color"]);
                 $resultado->setTelefono($fila["telefono"]);
