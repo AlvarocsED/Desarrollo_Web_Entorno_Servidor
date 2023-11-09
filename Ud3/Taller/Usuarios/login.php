@@ -38,7 +38,7 @@ if ($bd->getConexion() == null) {
 </head>
 
 <body>
-    <div class="container-md pt-5 w-1 border">
+    <div class="container-md pt-5 w-25 border">
         <!-- Login -->
         <h1>Login</h1>
         <form action="#" method="post">
