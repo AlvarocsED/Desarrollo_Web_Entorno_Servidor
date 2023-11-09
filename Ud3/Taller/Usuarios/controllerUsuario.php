@@ -56,7 +56,7 @@ if ($bd->getConexion() == null) {
     </section>
     <section>
         <!-- Visulzar Piezas -->
-        <?php include_once 'listarUsuarios.php' ?>
+        <?php include_once 'listarUsuario.php' ?>
     </section>
     <footer>
 

@@ -351,7 +351,7 @@ class Modelo{
                 $v->setMatricula($fila[2]); 
                 $v->setColor($fila[3]);
                 $v->setTelefono($fila["telefono"]);
-                $resultado[]=$v; .
+                $resultado[]=$v; 
             }
             
         } catch (PDOException $e) {
