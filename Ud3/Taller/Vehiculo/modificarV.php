@@ -19,7 +19,7 @@ function rellenarSelect(Vehiculo $v, Vehiculo $vSel){
     $bd = new Modelo();
     if($bd!=null){        
         echo "<h1>MODIFICAR VEHÍCULO</h1>";
-        include_once '../menu.php';
+        include_once '../Menu.php';
         
         
         if(isset($_POST["codigo"])){
@@ -39,7 +39,7 @@ function rellenarSelect(Vehiculo $v, Vehiculo $vSel){
                 $mensaje = "Error, la matrícula ya existe";
             }
             else{
-                //Datos del vehiculo a modificar
+                
                 $vSel->setPropietario($_POST["propietario"]);
                 $vSel->setMatricula(empty($_POST["matricula"])?null:$_POST["matricula"]);
                 $vSel->setColor(empty($_POST["color"])?null:$_POST["color"]);
