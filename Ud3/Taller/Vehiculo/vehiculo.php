@@ -1,18 +1,20 @@
 <?php
-class Vehiculo{
-    private int $codigo;
-    private int $propietario;
-    private string $matricula;
-    private string $color;
+class Vehiculo
+{
+    private int $codigo, $propietario;
+    private string $matricula, $color;
 
-
-    public function __construct(){
-        
+    function __construct($codigo, $propietario, $matricula, $color)
+    {
+        $this->codigo = $codigo;
+        $this->propietario = $propietario;
+        $this->matricula = $matricula;
+        $this->color = $color;
     }
 
     /**
      * Get the value of codigo
-     */ 
+     */
     public function getCodigo()
     {
         return $this->codigo;
@@ -22,7 +24,7 @@ class Vehiculo{
      * Set the value of codigo
      *
      * @return  self
-     */ 
+     */
     public function setCodigo($codigo)
     {
         $this->codigo = $codigo;
@@ -32,7 +34,7 @@ class Vehiculo{
 
     /**
      * Get the value of propietario
-     */ 
+     */
     public function getPropietario()
     {
         return $this->propietario;
@@ -42,7 +44,7 @@ class Vehiculo{
      * Set the value of propietario
      *
      * @return  self
-     */ 
+     */
     public function setPropietario($propietario)
     {
         $this->propietario = $propietario;
@@ -52,7 +54,7 @@ class Vehiculo{
 
     /**
      * Get the value of matricula
-     */ 
+     */
     public function getMatricula()
     {
         return $this->matricula;
@@ -62,7 +64,7 @@ class Vehiculo{
      * Set the value of matricula
      *
      * @return  self
-     */ 
+     */
     public function setMatricula($matricula)
     {
         $this->matricula = $matricula;
@@ -72,7 +74,7 @@ class Vehiculo{
 
     /**
      * Get the value of color
-     */ 
+     */
     public function getColor()
     {
         return $this->color;
@@ -82,7 +84,7 @@ class Vehiculo{
      * Set the value of color
      *
      * @return  self
-     */ 
+     */
     public function setColor($color)
     {
         $this->color = $color;
@@ -90,4 +92,3 @@ class Vehiculo{
         return $this;
     }
 }
-?>
