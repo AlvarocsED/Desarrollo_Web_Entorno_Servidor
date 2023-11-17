@@ -20,6 +20,27 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function obtenerReparaciones($idV)
+    {
+        $resultado = array();
+        try {
+           $consulta = $this->conexion->prepare(
+            "select * from reparacion where coche = ?");
+            $params = array($idV);
+            if($consulta->execute($params)){
+                while($fila=$consulta->fetch()){
+                    $r = new Reparacion($fila["id"],$fila["coche"],
+                            $fila["fechaHora"],$fila["tiempo"],$fila["pagado"],
+                            $fila["usuario"],$fila["precioH"]);
+                    //Añadir reparación a array resultado
+                    $resultado[]=$r;
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerVehiculos($codigoP)
     {
         $resultado = array();
@@ -70,6 +91,28 @@ class Modelo
             $consulta = $this->conexion->prepare('SELECT * from vehiculo 
             where matricula = ?');
             $params = array($m);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Vehiculo(
+                        $fila['codigo'],
+                        $fila['propietario'],
+                        $fila['matricula'],
+                        $fila['color']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerVehiculoId($id)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from vehiculo 
+            where codigo = ?');
+            $params = array($id);
             if ($consulta->execute($params)) {
                 if ($fila = $consulta->fetch()) {
                     $resultado = new Vehiculo(
