@@ -62,9 +62,42 @@ if ($bd->getConexion() == null) {
     } elseif (isset($_POST['mostrarV'])) {
         //Crear una variable de sesión con el propietario
         $_SESSION['propietario'] = $_POST['propietario'];
-    } elseif ($_POST["mostrarR"]) {
+        //Limpiamos el vehículo seleccionado de la sesión
+        unset($_SESSION['vehiculo']);
+        unset($_SESSION['reparacion']);
+    } elseif (isset($_POST["mostrarR"])) {
         $_SESSION['vehiculo'] = $_POST['mostrarR'];
-    } elseif (isset($_POST['borrar'])) {
+    } 
+    elseif (isset($_POST["datosR"])) {
+        $_SESSION['reparacion'] = $_POST['datosR'];
+        header('location:../reparacion/controllerReparacion.php');
+    } 
+    elseif(isset($_POST['updateR'])){
+        if($bd->modificarReparacion($_POST['updateR'],
+                 $_POST['horas'],(isset($_POST['pagado'])?true:false),$_POST['precioH'])){
+            $mensaje = array('i', 'Reparación modificada');
+        }        
+        else{
+            $mensaje = array('e', 'Error al modificar la reparación');
+        }
+    }
+    elseif (isset($_POST['borrar'])) {
+    } elseif (isset($_POST['crearR'])) {
+        //Crear reparación para vehículo en $_SESSION
+        $r = new Reparacion(
+            0,
+            $_SESSION['vehiculo'],
+            time(),
+            0,
+            false,
+            $_SESSION['usuario']->getId(),
+            0
+        );
+        if ($bd->crearReparacion($r)) {
+            $mensaje = array('i', 'Reparación creada con código ' . $r->getId());
+        } else {
+            $mensaje = array('e', 'Se ha producido un error al crear la reparación');
+        }
     }
     session_write_close();
 }
@@ -97,11 +130,11 @@ if ($bd->getConexion() == null) {
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de vehículo -->
-        <?php include_once 'datosVehiculo.php' ?>
+        <?php include_once 'datosVehiculos.php' ?>
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de reparaciones -->
-        <?php include_once '../Reparacion/datosReparacion.php' ?>
+        <?php include_once '../reparacion/datosReparaciones.php' ?>
     </section>
     <footer>
 

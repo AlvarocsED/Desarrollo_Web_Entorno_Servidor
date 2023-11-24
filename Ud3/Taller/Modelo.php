@@ -7,9 +7,9 @@ class Modelo
 
     private $conexion;
 
-    const URL = 'mysql:host=localhost;port=3307;dbname=taller';
+    const URL = 'mysql:host=localhost;port=3306;dbname=taller';
     const USUARIO = 'root';
-    const PS = 'root';
+    const PS = '';
 
     function __construct()
     {
@@ -20,20 +20,87 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function modificarReparacion(int $id, float $horas,bool $pagado,float $precioH)
+    {
+        try {
+            $consulta = $this->conexion->prepare('update reparacion set tiempo=?,
+            pagado=?, precioH=? where id = ?');
+            $params = array($horas,$pagado,$precioH,$id);
+            if($consulta->execute($params)){
+                if($consulta->rowCount()==1){
+                    return true;
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return false;
+    }
+    function crearReparacion(Reparacion $r)
+    {
+        $resultado = false;
+        try {
+            $consulta = $this->conexion->prepare("insert into reparacion values 
+            (default,?,now(),0,false,?,0)");
+            $params = array($r->getCoche(), $r->getUsuario());
+            if ($consulta->execute($params)) {
+                if ($consulta->rowCount() == 1) {
+                    $resultado = true;
+                    $r->setId($this->conexion->lastInsertId());
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerReparacion($id)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare(
+                "select * from reparacion where id = ?"
+            );
+            $params = array($id);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Reparacion(
+                        $fila["id"],
+                        $fila["coche"],
+                        $fila["fechaHora"],
+                        $fila["tiempo"],
+                        $fila["pagado"],
+                        $fila["usuario"],
+                        $fila["precioH"]
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerReparaciones($idV)
     {
         $resultado = array();
         try {
-           $consulta = $this->conexion->prepare(
-            "select * from reparacion where coche = ?");
+            $consulta = $this->conexion->prepare(
+                "select * from reparacion where coche = ? order by fechaHora desc"
+            );
             $params = array($idV);
-            if($consulta->execute($params)){
-                while($fila=$consulta->fetch()){
-                    $r = new Reparacion($fila["id"],$fila["coche"],
-                            $fila["fechaHora"],$fila["tiempo"],$fila["pagado"],
-                            $fila["usuario"],$fila["precioH"]);
+            if ($consulta->execute($params)) {
+                while ($fila = $consulta->fetch()) {
+                    $r = new Reparacion(
+                        $fila["id"],
+                        $fila["coche"],
+                        $fila["fechaHora"],
+                        $fila["tiempo"],
+                        $fila["pagado"],
+                        $fila["usuario"],
+                        $fila["precioH"]
+                    );
                     //Añadir reparación a array resultado
-                    $resultado[]=$r;
+                    $resultado[] = $r;
                 }
             }
         } catch (PDOException $e) {
