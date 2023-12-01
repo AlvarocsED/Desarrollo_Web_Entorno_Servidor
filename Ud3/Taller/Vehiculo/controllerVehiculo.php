@@ -1,5 +1,6 @@
 <?php
 require_once '../Modelo.php';
+require_once '../correo.php';
 $bd = new Modelo();
 if ($bd->getConexion() == null) {
     $mensaje = array('e', 'Error, no hay conexión con la bd');
@@ -155,12 +156,38 @@ if ($bd->getConexion() == null) {
             0,
             false,
             $_SESSION['usuario']->getId(),
-            0
+            0, 0
         );
         if ($bd->crearReparacion($r)) {
             $mensaje = array('i', 'Reparación creada con código ' . $r->getId());
         } else {
             $mensaje = array('e', 'Se ha producido un error al crear la reparación');
+        }
+    }
+    elseif(isset($_POST['pagarR'])){
+        //FALTA CHEQUEO DE SI LA REPARACIÓN EXISTE Y NO ESTÁ PAGADA
+        if($bd->pagarR($_POST['pagarR'])){
+            $mensaje = array('i', 'Reparación pagada ');
+        }
+        else {
+            $mensaje = array('e', 'Se ha producido un error al pagar la reparación');
+        }
+    }
+    elseif(isset($_POST['enviarR'])){
+        $r = $bd->obtenerReparacion($_POST['enviarR']);
+        $coche = $bd->obtenerVehiculoId($r->getCoche());
+        $propietario = $bd->obtenerPropietarioId($coche->getPropietario());
+        if($propietario->getEmail()!=null){
+            if($r!=null and $r->getPagado()){
+                $detalle = $bd->obtenerDetalleReparacion($r->getId());
+                enviarCorreo($bd,$r,$detalle,$propietario);
+            }
+            else{
+                $mensaje = array('e', 'Reparción no existe o no está pagada');
+            }
+        }
+        else{
+            $mensaje = array('e', 'Error, el propietario no tiene acutualizado el email');
         }
     }
     session_write_close();

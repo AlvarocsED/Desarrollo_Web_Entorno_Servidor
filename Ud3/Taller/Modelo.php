@@ -2,6 +2,9 @@
 require_once 'Pieza/pieza.php';
 require_once 'Usuarios/usuario.php';
 require_once 'Vehiculo/propietario.php';
+require_once 'Vehiculo/vehiculo.php';
+require_once 'Reparacion/Reparacion.php';
+require_once 'Reparacion/PiezaReparacion.php';
 class Modelo
 {
 
@@ -20,6 +23,49 @@ class Modelo
             echo $e->getMessage();
         }
     }
+    function obtenerDetalleReparacion($idR){
+        $resultado = array();
+        try {
+            $consulta = $this->conexion->prepare('call generarFactura(?)');
+            $params=array($idR);
+            if($consulta->execute($params)){
+                //REcuperar el resultado del select de reparación
+                if($fila=$consulta->fetch()){
+                    $resultado[]=array('Concepto'=>$fila['descripcion'], 'Cantidad'=>$fila['cantidad'],
+                    'Importe'=>$fila['importe'], 'Total'=>$fila['total']);
+                }
+                //REcuperar el resultado del select de piezareparacion
+                $consulta->nextRowset();
+                while($fila=$consulta->fetch()){
+                    $resultado[]=array('Concepto'=>$fila['descripcion'], 'Cantidad'=>$fila['cantidad'],
+                    'Importe'=>$fila['importe'], 'Total'=>$fila['total']);
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function pagarR($idR)
+    {
+        $resultado = false;
+        try {
+            //Ejecución de función
+            $consulta = $this->conexion->prepare('SELECT pagarReparacion(?) as total' );
+            $params=array($idR);
+            if($consulta->execute($params)){
+                if($fila=$consulta->fetch()){
+                    $resultado = true;
+                    //En no usamos el total que devuelve la función pero
+                    //esta es la forma de recuperar lo que devuelve la función
+                    $total = $fila['total']; 
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }    
     function borrarPiezaRep($pr){
         $resultado = false;
         try {
@@ -205,7 +251,7 @@ class Modelo
                     $pr = new PiezaReparacion(
                         new Reparacion($fila['id'],$fila['coche'],$fila['fechaHora'],
                                        $fila['tiempo'],$fila['pagado'],$fila['usuario'],
-                                       $fila['precioH']),
+                                       $fila['precioH'],$fila['importeTotal']),
                         $pieza,
                         $fila['cantidad'],
                         $fila['precio']
@@ -238,7 +284,7 @@ class Modelo
                     $resultado = new PiezaReparacion(
                         new Reparacion($fila['id'],$fila['coche'],$fila['fechaHora'],
                                        $fila['tiempo'],$fila['pagado'],$fila['usuario'],
-                                       $fila['precioH']),
+                                       $fila['precioH'],$fila['importeTotal']),
                         $pieza,
                         $fila['cantidad'],
                         $fila['precio']
@@ -271,7 +317,7 @@ class Modelo
         $resultado = false;
         try {
             $consulta = $this->conexion->prepare("insert into reparacion values 
-            (default,?,now(),0,false,?,0)");
+            (default,?,now(),0,false,?,0,0)");
             $params = array($r->getCoche(), $r->getUsuario());
             if ($consulta->execute($params)) {
                 if ($consulta->rowCount() == 1) {
@@ -301,7 +347,8 @@ class Modelo
                         $fila["tiempo"],
                         $fila["pagado"],
                         $fila["usuario"],
-                        $fila["precioH"]
+                        $fila["precioH"],
+                        $fila['importeTotal']
                     );
                 }
             }
@@ -343,7 +390,8 @@ class Modelo
                         $fila["tiempo"],
                         $fila["pagado"],
                         $fila["usuario"],
-                        $fila["precioH"]
+                        $fila["precioH"],
+                        $fila['importeTotal']
                     );
                     //Añadir reparación a array resultado
                     $resultado[] = $r;
@@ -475,7 +523,29 @@ class Modelo
         }
         return $resultado;
     }
-
+    function obtenerPropietarioId($id)
+    {
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * from propietario 
+            where codigo = ?');
+            $params = array($id);
+            if ($consulta->execute($params)) {
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Propietario(
+                        $fila['codigo'],
+                        $fila['dni'],
+                        $fila['nombre'],
+                        $fila['telefono'],
+                        $fila['email']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
     function obtenerPropietario($dni)
     {
         $resultado = null;
