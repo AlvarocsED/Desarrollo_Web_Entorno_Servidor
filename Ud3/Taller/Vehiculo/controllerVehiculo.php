@@ -221,11 +221,11 @@ if ($bd->getConexion() == null) {
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de vehículo -->
-        <?php include_once 'datosVehiculos.php' ?>
+        <?php include_once 'datosVehiculo.php' ?>
     </section>
     <section>
         <!-- Seleccionar / Visulizar datos de reparaciones -->
-        <?php include_once '../reparacion/datosReparaciones.php' ?>
+        <?php include_once '../Reparacion/datosReparaciones.php' ?>
     </section>
     <footer>
 

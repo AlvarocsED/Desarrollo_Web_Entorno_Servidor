@@ -13,19 +13,20 @@ function enviarCorreo(Modelo $bd,Reparacion $r,$detalle, Propietario $propietari
         $correo->isSMTP();
         $correo->Host = 'smtp.gmail.com';
         $correo->SMTPAuth = true;
-        $correo->Username= 'acastellanos02@educarex.es';
-        $correo->Password = 'Acs_2273';
+        $correo->Username= 'aacastellanos02@gmail.com';
+        $correo->Password = '';
         $correo->SMTPSecure=PHPMailer::ENCRYPTION_SMTPS;
         $correo->Port=465;
 
         //Configuración del correo que vamos a escribir
-        $correo->setFrom('acastellanos@educarex.es','Álvaro');
+        $correo->setFrom('aacastellanos02@gmail.com','Álvaro');
         $correo->addAddress($propietario->getEmail(),$propietario->getNombre());
         //Configuración del contenido del mensaje
         $correo->isHTML(true);
         $correo->Subject='Factura Reparación Nº '.$r->getId();
         $correo->Body="<h1>hola mundo</h1>";
         $correo->AltBody="<h1>hola mundo</h1>";
+        $correo->addAttachment('../icon/delete25.png');
         //Enviar correo
         if($correo->send()){
             $resultado=true;
