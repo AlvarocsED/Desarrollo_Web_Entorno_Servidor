@@ -1,4 +1,37 @@
-<!doctype html>
+<?php
+session_start();
+if (isset($_POST['idEmp'])) {
+	header("Location:login.php");
+	exit();
+}
+$idEmp=$_SESSION['idEmp'];
+$nombre=$_SESSION['nombre'];
+$dni=$_SESSION['dni'];
+$nombreDepartamento=$_SESSION['nombreDepartamento'];
+if (isseet($_POST['cerrar'])) {
+	session_destroy();
+	header("Location:login.php")
+}
+if (isset($_POST['enviar'])) {
+	$asunto=$_POST{'asunto'};
+	$mensaje=$_POST['mensaje'];
+	$paraDepartamento=$_POST['para'];
+	if (empty($_POST[$asunto]) or empty($_POST[$mensaje])) {
+		$mensajeError="El asunto o el mensaje no puede estar vacio";
+	} else{
+		$conexion= new mysqli('localhost', 'root', '', 'mensajes');
+		if ($conexion->connect_error) {
+			die("Error de conexión a la base de datos: " . $conexion->connect_error);
+			$conexion->begin_transaction();
+			try{
+				$fechaEnvio=date('Y-m-d');
+				$insertarMensaje=$conexion->prepare('')
+			}
+		}
+	}
+}
+?>
+ <!doctype html>
 <html>
       <head>
         <meta charset="utf-8">        
