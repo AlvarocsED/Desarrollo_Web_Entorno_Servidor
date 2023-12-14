@@ -1,3 +1,16 @@
+<?php
+session_start();
+if (isset($_SESSION['empleado'])) {
+	header('location: login.php');
+	exit();
+}
+$empleado=$_SESSION['empleado'];
+if (isset($_POST['cerrar'])) {
+	session_unset();
+	session_destroy();
+	header("location: login.php");
+}
+?>
 <!doctype html>
 <html>
       <head>
