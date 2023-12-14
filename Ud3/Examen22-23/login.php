@@ -1,23 +1,34 @@
 <?php
-session_start();
-require_once 'Modelo.php';
-if (isset($_POST['acceder'])) {
-    $idEmpleado=$_POST['usuario'];
-    $dni=$_POST['ps'];
-    if (empty($idEmpleado) or empty($dni)) {
-        $mensajeError='Tienes que introducir el ID del empleado y la ps';
-        $modelo=new Modelo();
-        $autenticado=$modelo->login($idEmpleado, $dni);
-        if ($autenticado) {
-            $empleado=$modelo->obtenerEmpleado($idEmpleado);
-            $_SESSION['empleado']=$empleado;
-            header("Location: mensajes.php");
-            exit();
-        } else{
-            $mensajeError = "El Id de Empleado o la contraseña son incorrectos.";
+    require_once 'Modelo.php';
+    $bd = new Modelo();
+    if($bd->getConexion()==null){
+        $mensaje = 'Error, no hay conexión con la bd';
+    }
+    else{
+        if(isset($_POST['acceder'])){
+            if(empty($_POST['usuario']) or empty($_POST['ps'])){
+                //Mostrar error
+                $mensaje = 'Error, rellena us y ps';
+            }
+            else{
+                //Hacer login
+                $retorno = $bd->login($_POST['usuario'],$_POST['ps']);
+                if($retorno==0){
+                    $mensaje='Error, no existe usuario';
+                }
+                elseif($retorno==1){
+                    //Recueperar info del usuario
+                    $usuario = $bd->obtenerEmpleado($_POST['usuario']);
+                    //Guardar usuario en sesión
+                    session_start();
+                    $_SESSION['usuario']=$usuario;
+                    //Redirigir a mensajes
+                    header('location:mensajes.php');
+                }
+            }
         }
     }
-}
+    
 ?>
 <!doctype html>
 <html>
@@ -27,7 +38,9 @@ if (isset($_POST['acceder'])) {
        </head>
      <body>     	
  			<div> 
-                <h1 style='color:red;'>mostrar mensaje si es necesario</h1> 
+                <h1 style='color:red;'>
+                <?php echo isset($mensaje)?$mensaje:'';?>
+            </h1> 
             </div>    
         	<form action="login.php" method="post">              	
             		<h1>Login</h1>    
