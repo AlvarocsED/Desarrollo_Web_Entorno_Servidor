@@ -1,8 +1,13 @@
 <?php
+require_once 'Modelo.php';
+
+$bd = new Modelo();
+if($bd->getConexion()==null){
+	$mensaje = 'Error, no hay conexión con la bd';
+}
 session_start();
-$tienda=$_SESSION['tienda'];
 if (isset($_POST['tienda'])) {
-    
+    $_SESSION['tienda'];   
 }
 ?>
 <!DOCTYPE html>
@@ -61,6 +66,18 @@ if (isset($_POST['tienda'])) {
             </table>   
             <button type="submit" name="crearPedido">Crear Pedido</button>         
         </div>
+        <button type="submit" name="cambiar" value="Cambiar tiends"></button>
     </form>
+    <?php
+$infoTienda=$_SESSION['tienda'];
+echo 'Datos Tienda: ' .$infoTienda;
+if (isset($_POST['cambiar'])) {
+    session_destroy();
+    header('location: mcDaw,php');
+    if (isset($_POST['crearPedido'])) {
+        
+    }
+}
+?>
 </body>
 </html>
