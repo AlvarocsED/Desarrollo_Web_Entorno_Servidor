@@ -13,6 +13,9 @@ class Modelo{
         }catch(PDOException $e){
             echo $e->getMessage();
         }
+        public function contenidoCesta(){
+            
+        }
 
     /**
      * Get the value of conexion
