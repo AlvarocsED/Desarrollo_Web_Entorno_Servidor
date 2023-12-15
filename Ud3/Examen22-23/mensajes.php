@@ -28,7 +28,7 @@ if (isset($_POST['cerrar'])) {
             		<hr/> 
             		<div> 
                 		<label for="para">Para</label><br/>           		
-                        <select id="para" name="para">
+                 	       <select id="para" name="para">
                         </select>  
                     </div>  
             		<div> 
