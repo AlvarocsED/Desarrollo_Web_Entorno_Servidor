@@ -1,14 +1,13 @@
 <?php
 require_once 'Modelo.php';
-
-$bd = new Modelo();
-if($bd->getConexion()==null){
-	$mensaje = 'Error, no hay conexión con la bd';
-}
+?>
+<?php
 session_start();
-if (isset($_POST['tienda'])) {
-    $_SESSION['tienda'];   
+if (isset($_POST['selTienda'])) {
+    $tiendaElegida=$_POST['tienda'];
+    $_SESSION['tienda']=$tiendaElegida;
 }
+$mostrarSeleccionTienda=empty($tiendaElegida);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +21,19 @@ if (isset($_POST['tienda'])) {
         <h1 style='color:red;'>Mensajes</h1>
     </div>
     <form action="mcDaw.php" method="post">
+        <?php
+        if ($mostrarSeleccionTienda);?>
         <div>
             <h1 style='color:blue;'>Tienda</h1>
             <label for="tienda">Tienda</label><br />
             <select name="tienda">
-                <option name="tienda" value="Navalmoral de la Mata"></option>
-                <option name="tienda" value="Caceres 1"></option>
-                <option name="tienda" value="Plasencia 1"></option>                
+                <?php
+                $bd=new Modelo();
+                $tiendas=$bd->obtenerTiendas();
+                foreach ($tiendas as $tienda) {
+                    echo "<option value='{$tienda['codigo']}'>{$tienda['nombre']}</option>";
+                }
+                ?>   
             </select>
             <button type="submit" name="selTienda">Seleccionar tienda</button>
         </div>
@@ -68,16 +73,5 @@ if (isset($_POST['tienda'])) {
         </div>
         <button type="submit" name="cambiar" value="Cambiar tiends"></button>
     </form>
-    <?php
-$infoTienda=$_SESSION['tienda'];
-echo 'Datos Tienda: ' .$infoTienda;
-if (isset($_POST['cambiar'])) {
-    session_destroy();
-    header('location: mcDaw,php');
-    if (isset($_POST['crearPedido'])) {
-        
-    }
-}
-?>
 </body>
-</html>
+</html> 

@@ -13,9 +13,6 @@ class Modelo{
         }catch(PDOException $e){
             echo $e->getMessage();
         }
-        public function contenidoCesta(){
-            
-        }
 
     /**
      * Get the value of conexion
@@ -24,6 +21,21 @@ class Modelo{
     {
         return $this->conexion;
     }
+    public function obtenerTiendas()
+    {
+        $tiendas = array();
+
+        try {
+            $stmt = $this->conexion->query("select codigo, nombre, telefono from tienda");
+            $tiendas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+
+        return $tiendas;
+    }
+}
+
 
     /**
      * Set the value of conexion
