@@ -145,6 +145,11 @@ if ($bd->getConexion() == null) {
         }
         ?>
     </form>
+    <?php
+    if (isset($_POST['borrasProducto'])) {
+        
+    }
+    ?>
 </body>
 
 </html>
