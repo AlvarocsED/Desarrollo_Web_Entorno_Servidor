@@ -51,3 +51,7 @@ Route::get('productos/modificar/{idP}/{unTexto}',function($idP,$texto){
     echo '<h1>'.$texto.'</h1>';
     echo 'Página para modificar el producto '.$idP;
 });
+Route::get('prouctos/obt/{idP}/{unTexto ?}', function($idP, $texto){
+    echo '<h1>'.$texto.'</h1>'
+    echo 'Página para obtener el producto '.$idP; 
+});
