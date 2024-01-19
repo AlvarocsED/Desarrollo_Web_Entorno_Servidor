@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pedido__productos', function (Blueprint $table) {
+        Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+            $table->dateTime('fecha');
+            //Definir el cliente como FK
+            $table->foreignId('cliente_id')->constrained()->
+            onDelete('restrict')->onUpdate('cascade');
         });
     }
 
@@ -22,7 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pedido__productos');
+        Schema::dropIfExists('pedidos');
     }
 };
-    
