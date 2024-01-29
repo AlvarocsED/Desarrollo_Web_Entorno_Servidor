@@ -9,7 +9,7 @@
 <body>
 <?php
 //Declaración de variables de diferentes tipos
-$nombre = 'Rosa';
+$nombre = 'Álvaro';
 $edad = 18;
 $estatura = 1.60;
 $esAlumno = true;
