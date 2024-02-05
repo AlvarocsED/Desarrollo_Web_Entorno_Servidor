@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClienteC extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     //Método que maneja la ruta clientes
     function clientes(){
         $clientes = Cliente::all();
         return view('clientes/clientes',compact('clientes'));
     }
+    /*
     //Método que maneja la ruta crearcliente
     function crear(){
         return view('clientes/crear');
@@ -43,7 +51,7 @@ class ClienteC extends Controller
             //mensaje de error
             return back()->with('mensaje','Error al crear el cliente');
        }
-    }
+    }*/
     //Método que maneja la ruta verC
     function ver($idC){
         return 'Página para ver el cliente '.$idC;
@@ -71,20 +79,35 @@ class ClienteC extends Controller
         $c = Cliente::find($idC);
         //¡¡ VALIDAR SI SE HA CAMBIADO EL email
         //QUE NO ESTÉ REPETIDO!!
-        if($c->email != $r->email){
-            $r->validate(['email'=>'unique:App\Models\Cliente,email']);
+        if($c->usuario->email != $r->email){
+            $r->validate(['email'=>'unique:App\Models\User,email']);
         }
 
-        $c->nombre = $r->nombre;
-        $c->email = $r->email;
+        $c->usuario->name = $r->nombre;
+        $c->usuario->email = $r->email;
         $c->telefono = $r->telefono;
         $c->direccion= $r->direccion;
-        if($c->save()){
-            return redirect()->route('clientes')->with('mensaje','Cliente modificado correctamente');
-        }
-        else{
+        $error = false;
+        try {
+            DB::transaction(function() use ($c){
+                if($c->save()){
+                    if(!$c->usuario->save()){
+                     return back()->with('mensaje','Error, no se ha modificado el cliente');
+                    }
+                 }
+                 else{
+                     return back()->with('mensaje','Error, no se ha modificado el cliente');
+                 }});
+        } catch (Exception $e) {
+            $error=true;
             return back()->with('mensaje','Error, no se ha modificado el cliente');
         }
+        finally{
+            if(!$error){
+                return redirect()->route('clientes')->with('mensaje','Cliente modificado correctamente');
+            }
+        }
+        
     }
      
     //Método que maneja la ruta borrarP
@@ -97,9 +120,29 @@ class ClienteC extends Controller
             return back()->with('mensaje', 'Error, el cliente tiene pedidos');
         }
         else{
-            if($c->delete()){
-                return back()->with('mensaje', 'Cliente borrado'); 
+            $error = false;
+            try {
+                DB::transaction(function() use ($c){                    
+                    if($c->delete()){
+                        if(!$c->usuario->delete()){
+                         return back()->with('mensaje','Error, no se ha borrado el usuario');
+                        }
+                     }
+                     else{
+                         return back()->with('mensaje','Error, no se ha borrado el cliente');
+                     }
+                });
+            } catch (Exception $e) {
+                $error=true;
+                return back()->with('mensaje','Error, no se ha borrado el cliente');
             }
+            finally{
+                if(!$error){
+                    return redirect()->route('clientes')->with('mensaje','Cliente borrado correctamente');
+                }
+            }
+
+            
         }
     }
 }
