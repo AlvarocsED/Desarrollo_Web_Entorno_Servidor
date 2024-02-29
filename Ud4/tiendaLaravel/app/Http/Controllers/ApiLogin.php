@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ApiProductos extends Controller
+class ApiLogin extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $productos= Productos::all();
-        return  $productos;
+        //
     }
 
     /**
@@ -28,9 +30,7 @@ class ApiProductos extends Controller
      */
     public function store(Request $request)
     {
-        $producto= new Productos();
-        $producto->nombre=$request->nommbre;
-        
+        //
     }
 
     /**
@@ -38,8 +38,7 @@ class ApiProductos extends Controller
      */
     public function show(string $id)
     {
-        $producto=Productos::find();
-        return $producto;
+        //
     }
 
     /**
@@ -65,5 +64,21 @@ class ApiProductos extends Controller
     {
         //
     }
-    
+    public function login(Request $r){
+        //Abrir sesión si us y ps son correctos
+        $r->validate([
+            'email'=>'required',
+            'ps'=>'required'
+        ]);
+        $credenciales = ['email'=>$r->email,
+            'password'=>$r->ps];
+        if(Auth::attempt($credenciales)){
+            //REcuperar el id del cliente a partir del Usuario logueado
+            $cliente = Cliente::where('user_id',Auth::user()->id)->first();
+            return new UserResource($cliente);
+        }
+        else{
+            return abort('401');
+        }
+    }
 }
