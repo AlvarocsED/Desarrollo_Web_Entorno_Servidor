@@ -122,8 +122,7 @@ class Modelo
             echo $e->getMessage();
         }
         return $resultado;
-    }
-    function obtenerTiendas()
+    }function obtenerTiendas()
     {
         $resultado = array();
         try {
@@ -140,6 +139,7 @@ class Modelo
         return $resultado;
     }
 
+    
     /**
      * Get the value of conexion
      */
