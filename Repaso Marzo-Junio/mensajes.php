@@ -5,14 +5,11 @@ $bd = new Modelo();
 if($bd->getConexion()==null){
 	$mensaje = 'Error, no hay conexión con la bd';
 }
-//Chequear si hay empleado en la sesión
 session_start();
 if(isset($_SESSION['usuario'])){
-	//Hay empleado conectado
 	$empleado = $_SESSION['usuario'];
 }
 else{
-	//Redirigir a login
 	header('location:login.php');
 }
 if(isset($_POST['cerrar'])){
@@ -27,9 +24,6 @@ if(isset($_POST['Enviar'])){
 		$m = new Mensaje(0,$empleado->getIdEmp(),$_POST['para'],
 		$_POST['asunto'],date('Y-m-d'),$_POST['mensaje']);
 		$destinarios = $bd->obtenerEmpleadosDepartamento($_POST['para']);
-		//El id del mensaje generado se puede recuperar de dos formas
-		//Bien que lo devuelva el método enviarMensaje
-		//o actualizándolo en el objeto $m
 		$id=$bd->enviarMensaje($m,$destinarios);
 		if($id!=0){
 			$mensaje = 'Mensaje nº '.$m->getIdMen().' enviado';
@@ -38,7 +32,6 @@ if(isset($_POST['Enviar'])){
 		else{
 			$mensaje = 'Error, mensaje no enviado';
 		}
-
 	}
 }
 ?>

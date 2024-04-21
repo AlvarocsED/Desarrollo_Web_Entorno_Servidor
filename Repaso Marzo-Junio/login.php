@@ -7,22 +7,17 @@
     else{
         if(isset($_POST['acceder'])){
             if(empty($_POST['usuario']) or empty($_POST['ps'])){
-                //Mostrar error
                 $mensaje = 'Error, rellena us y ps';
             }
             else{
-                //Hacer login
                 $retorno = $bd->login($_POST['usuario'],$_POST['ps']);
                 if($retorno==0){
                     $mensaje='Error, no existe usuario';
                 }
                 elseif($retorno==1){
-                    //Recueperar info del usuario
                     $usuario = $bd->obtenerEmpleado($_POST['usuario']);
-                    //Guardar usuario en sesión
                     session_start();
                     $_SESSION['usuario']=$usuario;
-                    //Redirigir a mensajes
                     header('location:mensajes.php');
                 }
             }

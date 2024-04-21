@@ -72,16 +72,13 @@ class Modelo{
     function enviarMensaje(Mensaje $m,$destinarios){
         $resultado=0;
         try{
-            //HAy que hacer inserts en 2 tablas => TRANSACCIÓN
             $this->conexion->beginTransaction();
             $consulta = $this->conexion->prepare(
                 'INSERT into mensaje values (default,?,?,?,curdate(),?)');
             $params=array($m->getDeEmpleado(),$m->getParaDepartamento(),
                             $m->getAsunto(),$m->getMensaje());
             if($consulta->execute($params)){
-                //REcuperar el id del mensaje generado
                 $idMensaje = $this->conexion->lastInsertId();
-                //Hacer un insert en para para cada destinatario
                 foreach($destinarios as $d){
                     $consulta = $this->conexion->prepare(
                         'INSERT into para values (?,?,false)');
@@ -162,12 +159,10 @@ class Modelo{
     function login(int $us, string $ps){
         $resultado = 0;
         try{
-            //Ejecutar fucnión almacenada en bd
             $consulta = $this->conexion->prepare('select login(?,?)');
             $params = array($us,$ps);
             if($consulta->execute($params)){
                 if($fila=$consulta->fetch()){
-                    //devolver lo que devuelve login
                     return $fila[0];
                 }
             }
