@@ -23,6 +23,24 @@ if (isset($_POST['selModalidad'])) {
             }
         }
     }
+    if (isset($_POST['cambiarA'])) {
+        unset($_SESSION['alumnoSeleccionado']);
+        header("Location: skills.php");
+        exit();
+    }
+    
+    if (isset($_POST['cambiarM'])) {
+        unset($_SESSION['modalidad']);
+        unset($_SESSION['alumnoSeleccionado']);
+        header("Location: skills.php");
+        exit();
+    }
+    if (isset($_POST['guardar'])) {
+        $alumnoSeleccionado = $_SESSION['alumnoSeleccionado'];
+        $idPrueba = $_POST['prueba'];
+        $puntosObtenidos = $_POST['puntos'];
+        $comentario = $_POST['comentario'];
+        
 //Este if sobra ya que tanto la modalidad como los alumnos los tratas directamente
 //cuando necesitas trabajar con ellos.
 /*if (isset($_SESSION['modalidad'])) {
@@ -83,7 +101,11 @@ if (isset($_POST['selModalidad'])) {
         <!-- if para saber si hay alumno seleccionado -->
         <div>
             <h1 style='color:blue;'>Corrección</h1>
-            <h2 style='color:green;'>Modalidad Seleccionada - Nombre Alumno - Nota:X (Provisional)
+                <?php
+                $alumnoSeleccionado = $_SESSION['alumnoSeleccionado'];
+                $estadoCorreccion = $alumnoSeleccionado->getFinalizado() ? "Definitiva" : "Provisional";
+                echo "<h2 style='color:green;'>Modalidad Seleccionada - {$alumnoSeleccionado->getNombre()} - Nota: {$alumnoSeleccionado->getPuntuacion()} ($estadoCorreccion)</h2>";
+                ?>
                 <button type="submit" name="cambiarM">Cambiar Modalidad</button>
                 <button type="submit" name="cambiarA">Cambiar Alumno</button>
             </h2>

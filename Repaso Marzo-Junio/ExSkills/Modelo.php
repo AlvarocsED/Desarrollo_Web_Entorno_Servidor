@@ -1,10 +1,12 @@
 <?php
 require_once 'Modalidad.php';
+//Faltaba el require de ALumno
+require_once 'Alumno.php';
 class Modelo
 {
     private string $url = 'mysql:host=localhost;port=3306;dbname=skills';
     private string $us = 'root';
-    private string $ps = 'root';
+    private string $ps = '';
 
     private $conexion = null;
 
@@ -33,10 +35,14 @@ class Modelo
     }
     function obtenerAlumnoModalidad($modalidadElegida)
     {
-        $resultado = array($modalidadElegida);
+        //Se inicaliza con array vacío
+        //$resultado = array($modalidadElegida);
+        $resultado = array();
         try {
-            $consulta = $this->conexion->query('SELECT * from alumno where modalidad = ?');
-            $params = array($modalidadElegida->id);
+            //No es query sino prepare
+            //$consulta = $this->conexion->query('SELECT * from alumno where modalidad = ?');
+            $consulta = $this->conexion->prepare('SELECT * from alumno where modalidad = ?');
+            $params = array($modalidadElegida->getId());
             if ($consulta->execute($params)) {
                 while ($fila = $consulta->fetch()) {
                     $resultado[] = new Alumno(
@@ -55,24 +61,51 @@ class Modelo
         return $resultado;
     }
     function obtenerModalidad($idModalidad)
-{
-    $resultado= array($idModalidad);
-    try {
-        $consulta = $this->conexion->prepare('SELECT * FROM modalidad WHERE id = ?');
-        $params=array($idModalidad->id);
-        if ($consulta->execute($params)){
-            while ($fila = $consulta->fetch()){
-                $resultado[] = new Modalidad(
+    {
+        //Solamente devuelve o null o una modalidad, nunca un array
+        //$resultado = array($idModalidad);
+        $resultado = null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * FROM modalidad WHERE id = ?');
+            //No $idModalidad no es un objeto sin no un int ya que viene de $_POST
+            //
+            $params = array($idModalidad);
+            if ($consulta->execute($params)) {
+                //De haber algo, solamente hay 1
+                //
+                if ($fila = $consulta->fetch()) {
+                    $resultado = new Modalidad(
+                        $fila['id'],
+                        $fila['modalidad']
+                    );
+                }
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+        return $resultado;
+    }
+    function obtenerPrueba($idPrueba)
+    {
+        $resultado=null;
+        try {
+            $consulta = $this->conexion->prepare('SELECT * FROM prueba WHERE id = ?');
+            $params=array($idPrueba);
+            if ($consulta->execute($params)){
+            if ($fila = $consulta->fetch()){
+                $resultado=new Prueba(
                     $fila['id'],
-                    $fila['modalidad']
+                    $fila['modalidad'],
+                    $fila['fecha'],
+                    $fila['descripcion'],
+                    $fila['puntuacion']
                 );
             }
+            }
         }
-    } catch (PDOException $e) {
-        echo $e->getMessage();
+        return $resultado;
     }
-    return $resultado;
-}
+            // 
     /**
      * Get the value of conexion
      */
