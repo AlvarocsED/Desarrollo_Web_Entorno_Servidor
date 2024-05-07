@@ -1,48 +1,79 @@
 <?php
-class Modelo{
-    private string $url='mysql:host=localhost;port=3306;dbname=mensajes';
+require_once 'Modalidad.php';
+class Modelo
+{
+    private string $url = 'mysql:host=localhost;port=3306;dbname=skills';
     private string $us = 'root';
-    private string $ps = '';
+    private string $ps = 'root';
 
-    private $conexion=null;
+    private $conexion = null;
 
     function __construct()
     {
-        try{
-            $this->conexion = new PDO($this->url,$this->us,$this->ps);
-        }catch(PDOException $e){
+        try {
+            $this->conexion = new PDO($this->url, $this->us, $this->ps);
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
     }
-    function obtenerModalidad(){
-        $resultado=array();
-        try{
+    function obtenerModalidades()
+    {
+        $resultado = array();
+        try {
             $consulta = $this->conexion->query('SELECT * from modalidad');
-            if($consulta->execute()){
-                while($fila=$consulta->fetch()){
-                    $resultado[]=new Modalidad($fila['id'],$fila['modalidad']);                   
+            if ($consulta->execute()) {
+                while ($fila = $consulta->fetch()) {
+                    $resultado[] = new Modalidad($fila['id'], $fila['modalidad']);
                 }
             }
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
         return $resultado;
     }
-    function obtenerAlumnoModalidad($modalidadElegida){
-        $resultado=array();
-        try{
-            $consulta = $this->conexion->query('SELECT * from alumno where modalidad = (select id from modalidad where modalidad ='$modalidadElegida);
-            if($consulta->execute()){
-                while($fila=$consulta->fetch()){
-                    $resultado[]=new Alumno($fila['nombre   ']);                   
+    function obtenerAlumnoModalidad($modalidadElegida)
+    {
+        $resultado = array($modalidadElegida);
+        try {
+            $consulta = $this->conexion->query('SELECT * from alumno where modalidad = ?');
+            $params = array($modalidadElegida->id);
+            if ($consulta->execute($params)) {
+                while ($fila = $consulta->fetch()) {
+                    $resultado[] = new Alumno(
+                        $fila['id'],
+                        $fila['nombre'],
+                        $fila['id'],
+                        $fila['modalidad'],
+                        $fila['puntuacion'],
+                        $fila['finalizado']
+                    );
                 }
             }
-        }catch(PDOException $e){
+        } catch (PDOException $e) {
             echo $e->getMessage();
         }
         return $resultado;
     }
-/**
+    function obtenerModalidad($idModalidad)
+{
+    $resultado= array($idModalidad);
+    try {
+        $consulta = $this->conexion->prepare('SELECT * FROM modalidad WHERE id = ?');
+        $params=array($idModalidad->id);
+        if ($consulta->execute($params)){
+            while ($fila = $consulta->fetch()){
+                $resultado[] = new Modalidad(
+                    $fila['id'],
+                    $fila['modalidad']
+                );
+            }
+        }
+    } catch (PDOException $e) {
+        echo $e->getMessage();
+    }
+    return $resultado;
+}
+    /**
      * Get the value of conexion
      */
     public function getConexion()
@@ -60,4 +91,3 @@ class Modelo{
         return $this;
     }
 }
-?>
