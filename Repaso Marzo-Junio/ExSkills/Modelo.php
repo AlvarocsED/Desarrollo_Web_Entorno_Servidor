@@ -105,6 +105,17 @@ class Modelo
         }
         return $resultado;
     }
+    public function agregarCorreccion($idAlumno, $idPrueba, $puntos, $comentario)
+    {
+        $resultado=array();
+        try {
+            $consulta = $this->conexion->prepare('INSERT INTO correccion (alumno, prueba, puntos, comentario) VALUES (?, ?, ?, ?)');
+            $params=array($idAlumno, $idPrueba, $puntos, $comentario);
+            if ($consulta->execute($params)){
+
+            }
+        }
+    }
             // 
     /**
      * Get the value of conexion
